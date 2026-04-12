@@ -13,15 +13,26 @@ A [BepInEx](https://docs.bepinex.dev/) plugin for [**Supermarket Together**](htt
 - **Supermarket Together** with **BepInEx** installed for that game.
 - **.NET Framework 4.7.2** SDK (or compatible tooling) to build the project under [`src/MySupermarketDataMod.csproj`](src/MySupermarketDataMod.csproj).
 
-## Build
+## Developing locally
 
-From the `src` directory:
+This repository **does not** ship the game’s managed assemblies or BepInEx DLLs (see [License / game assets](#license--game-assets)). To compile, you must copy them from **your own install** into the folders the project references:
+
+| Folder | What to put there |
+|--------|-------------------|
+| [`src/SuperMarketDll/`](src/SuperMarketDll/) | Unity / game **Managed** DLLs (`Assembly-CSharp.dll`, `UnityEngine*.dll`, etc.) — every file name referenced under `SuperMarketDll\` in [`MySupermarketDataMod.csproj`](src/MySupermarketDataMod.csproj). |
+| [`src/BepInExDll/`](src/BepInExDll/) | **BepInEx** core libraries (`BepInEx.dll`, Harmony, Mono.Cecil, …) matching the `BepInExDll\` references in the same `.csproj`. |
+
+**Game DLLs:** From your Steam install, open the game’s `…_Data/Managed/` directory (Unity layout) and copy the needed assemblies into `src/SuperMarketDll/`. Use a game **patch version** consistent with what you test against.
+
+**BepInEx DLLs:** From the same game folder, use the BepInEx layout you already run (commonly files under `BepInEx/core/`) and copy the referenced DLLs into `src/BepInExDll/`.
+
+After both folders contain the expected files, build from the repository root:
 
 ```bash
-dotnet build -c Release
+dotnet build src/MySupermarketDataMod.csproj -c Release
 ```
 
-Output assembly: `MySupermarketDataMod.dll` (under `bin/Release/net472/` or similar).
+Output: `src/bin/Release/net472/MySupermarketDataMod.dll` (paths relative to the repo root).
 
 ## Install
 
@@ -70,7 +81,7 @@ The listener binds to **localhost** only. If the server fails to start, check th
 
 ## Repository layout
 
-- [`src/`](src/) — C# plugin source, `.csproj`, and referenced game/BepInEx DLLs used for compilation.
+- [`src/`](src/) — C# plugin source and `.csproj`. Game and BepInEx assemblies live under [`src/SuperMarketDll/`](src/SuperMarketDll/) and [`src/BepInExDll/`](src/BepInExDll/) **on your machine only** (see [Developing locally](#developing-locally)); tracked files there are setup notes, not binaries.
 - [`src/Plugin.cs`](src/Plugin.cs) — entry point; starts [`LocalHttpApiService`](src/Services/LocalHttpApiService.cs).
 - [`.bruno/SupermarketSim/`](.bruno/SupermarketSim/) — [Bruno](https://www.usebruno.com/) API collection (ping, stats, products, spawned products) targeting `http://localhost:8080`.
 
@@ -80,7 +91,15 @@ Open the repo in [Bruno](https://www.usebruno.com/) and import the collection un
 
 ## Continuous integration
 
-[`.github/workflows/dotnet-desktop.yml`](.github/workflows/dotnet-desktop.yml) runs `dotnet restore` and `dotnet build` on **Ubuntu** for pushes and pull requests to `develop`. The build **requires** `src/SuperMarketDll/` and `src/BepInExDll/` to be present in the checked-out tree (same as a local build). If those folders are not in the remote repository, add them or adjust the workflow (for example artifact download, self-hosted runner, or a conditional job).
+[`.github/workflows/dotnet-desktop.yml`](.github/workflows/dotnet-desktop.yml) runs a **lightweight check** on pushes and pull requests to `develop` (and can be run manually via **workflow_dispatch**): it verifies the project file and the setup readmes exist. It does **not** run `dotnet build`, because **GitHub-hosted runners do not have Supermarket Together’s managed DLLs**, and this public repository does not ship them.
+
+**How to get a real build in CI later (optional):**
+
+- **Self-hosted runner** on a machine that has the game (or a copy of the two DLL folders) installed; add a job that runs `dotnet build` after copying artifacts into place.
+- **Private fork / internal pipeline** that restores proprietary assemblies from your own secure storage (still subject to license terms).
+- **Refactor the `.csproj`** to pull everything possible from **NuGet** (e.g. BepInEx packages) and only require a minimal set of game DLLs via a secret-backed download — game assemblies usually **cannot** be fetched legally by a public workflow.
+
+Until then, **treat `dotnet build` as a local step** after [Developing locally](#developing-locally).
 
 ## TODO
 
@@ -92,7 +111,7 @@ Open the repo in [Bruno](https://www.usebruno.com/) and import the collection un
 - [ ] Update for easier internal versioning
 - [ ] Cleanup 'dotnet build' warnings and remove un-used references
 - [ ] Add response wrapper to all domain classes so errors are consistent for logging and HTTP status codes
-- [ ] Improve how game and BepInEx DLLs are referenced (instead of checked-in `BepInExDll` and `SuperMarketDll` folders)
+- [ ] Improve how game and BepInEx DLLs are referenced (NuGet / slimmer refs; game assemblies remain local-only for a public repo)
 
 ### Other ideas
 

@@ -15,11 +15,11 @@ internal static class JsonStringHelper
             return "\"\"";
         }
 
-        StringBuilder sb = new StringBuilder(s.Length + 2);
+        StringBuilder sb = new(s.Length + 2);
         sb.Append('"');
-        for (var i = 0; i < s.Length; i++)
+        for (int i = 0; i < s.Length; i++)
         {
-            var c = s[i];
+            char c = s[i];
             switch (c)
             {
                 case '\\':

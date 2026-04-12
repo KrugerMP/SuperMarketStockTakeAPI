@@ -64,7 +64,7 @@ public sealed class LocalHttpApiService
         {
             try
             {
-                var context = _listener.GetContext();
+                HttpListenerContext context = _listener.GetContext();
                 HandleRequest(context);
             }
             catch (HttpListenerException)
@@ -84,11 +84,11 @@ public sealed class LocalHttpApiService
 
     private void HandleRequest(HttpListenerContext context)
     {
-        var request = context.Request;
-        var response = context.Response;
+        HttpListenerRequest request = context.Request;
+        HttpListenerResponse response = context.Response;
         try
         {
-            var path = request.Url.AbsolutePath.TrimEnd('/');
+            string path = request.Url.AbsolutePath.TrimEnd('/');
             if (request.HttpMethod != "GET")
             {
                 response.StatusCode = 405;
@@ -129,7 +129,7 @@ public sealed class LocalHttpApiService
 
     private static void WriteJson(HttpListenerResponse response, string json)
     {
-        var buffer = Encoding.UTF8.GetBytes(json);
+        byte[] buffer = Encoding.UTF8.GetBytes(json);
         response.ContentType = "application/json; charset=utf-8";
         response.ContentLength64 = buffer.Length;
         response.OutputStream.Write(buffer, 0, buffer.Length);

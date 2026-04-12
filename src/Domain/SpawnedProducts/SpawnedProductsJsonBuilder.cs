@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Reflection;
-using MySupermarketDataMod.Domain.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
@@ -14,7 +13,7 @@ namespace MySupermarketDataMod.Domain.SpawnedProducts;
 /// </summary>
 public static class SpawnedProductsJsonBuilder
 {
-    private static readonly JsonSerializerSettings JsonSettings = new()
+    private static readonly JsonSerializerSettings _jsonSettings = new()
     {
         ContractResolver = new CamelCasePropertyNamesContractResolver(),
         Formatting = Formatting.Indented,
@@ -22,14 +21,14 @@ public static class SpawnedProductsJsonBuilder
 
     private static MethodInfo _getProductsExistencesMethod;
 
-    public static string GetSpawnedProductsJson(LocalApiGameState state)
+    public static string GetSpawnedProductsJson()
     {
         ProductListing listing = ProductListing.Instance;
         if (listing == null)
         {
             return JsonConvert.SerializeObject(
                 new { error = "ProductListing not available (not in a loaded game session)." },
-                JsonSettings);
+                _jsonSettings);
         }
 
         ManagerBlackboard blackboard = ResolveManagerBlackboard(listing);
@@ -37,10 +36,10 @@ public static class SpawnedProductsJsonBuilder
         {
             return JsonConvert.SerializeObject(
                 new { error = "ManagerBlackboard not found (GameData / listing not ready)." },
-                JsonSettings);
+                _jsonSettings);
         }
 
-        var payload = new
+        object payload = new
         {
             cargoSpawnQueue = BuildCargoQueue(blackboard, listing),
             shoppingList = BuildShoppingList(blackboard, listing),
@@ -48,7 +47,7 @@ public static class SpawnedProductsJsonBuilder
             stockCounts = BuildStockCounts(blackboard, listing),
         };
 
-        return JsonConvert.SerializeObject(payload, JsonSettings);
+        return JsonConvert.SerializeObject(payload, _jsonSettings);
     }
 
     private static ManagerBlackboard ResolveManagerBlackboard(ProductListing listing)
@@ -69,7 +68,7 @@ public static class SpawnedProductsJsonBuilder
 
     private static List<object> BuildCargoQueue(ManagerBlackboard blackboard, ProductListing listing)
     {
-        List<object> list = new List<object>();
+        List<object> list = new();
         if (blackboard.idsToSpawn == null || blackboard.idsToSpawn.Count == 0)
         {
             return list;
@@ -95,7 +94,7 @@ public static class SpawnedProductsJsonBuilder
 
     private static List<object> BuildShoppingList(ManagerBlackboard blackboard, ProductListing listing)
     {
-        List<object> list = new List<object>();
+        List<object> list = new();
         if (blackboard.shoppingListParent == null)
         {
             return list;
@@ -127,7 +126,7 @@ public static class SpawnedProductsJsonBuilder
 
     private static List<object> BuildDeliveryBoxes(ManagerBlackboard blackboard, ProductListing listing)
     {
-        List<object> list = new List<object>();
+        List<object> list = new();
         if (blackboard.boxParent == null)
         {
             return list;
@@ -163,7 +162,7 @@ public static class SpawnedProductsJsonBuilder
 
     private static List<object> BuildStockCounts(ManagerBlackboard blackboard, ProductListing listing)
     {
-        List<object> list = new List<object>();
+        List<object> list = new();
         MethodInfo method = GetGetProductsExistencesMethod();
         if (method == null || listing.availableProducts == null)
         {

@@ -2,7 +2,6 @@ using System.IO;
 using BepInEx;
 using BepInEx.Logging;
 using MySupermarketDataMod.Domain.Http;
-using MySupermarketDataMod.Domain.StoreProducts;
 using MySupermarketDataMod.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +11,7 @@ namespace MySupermarketDataMod;
 [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
 public class Plugin : BaseUnityPlugin
 {
-    internal static new ManualLogSource Logger;
+    internal static ManualLogSource logger;
 
     private LocalApiGameState _apiState;
     private LocalHttpApiService _httpApi;
@@ -40,17 +39,17 @@ public class Plugin : BaseUnityPlugin
         // TODO: replace with actual game objects (use UnityExplorer to find them)
         string data = "Money: ???\nSales: ???\nTime: " + Time.time;
         File.WriteAllText(Path.Combine(Path.Combine(Application.dataPath, ".."), "supermarket_stats.txt"), data);
-        Logger.LogInfo("Stats dumped to supermarket_stats.txt");
+        logger.LogInfo("Stats dumped to supermarket_stats.txt");
     }
 
     private void Awake()
     {
-        Logger = base.Logger;
-        Logger.LogInfo($"Plugin {PluginInfo.GUID} is loaded!");
+        logger = base.Logger;
+        logger.LogInfo($"Plugin {PluginInfo.GUID} is loaded!");
 
         _apiState = new LocalApiGameState();
 
-        _httpApi = new LocalHttpApiService(Logger, _apiState);
+        _httpApi = new LocalHttpApiService(logger, _apiState);
         _httpApi.Start();
     }
 

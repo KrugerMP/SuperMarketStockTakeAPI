@@ -32,7 +32,7 @@ public sealed class LocalApiGameState
     /// </summary>
     public void RefreshProductsJson()
     {
-        string json = StoreProductsJsonBuilder.GetAllProductStats(this);
+        string json = StoreProductsJsonBuilder.GetAllProductStats();
         lock (_lock)
         {
             _cachedProductsJson = json;
@@ -44,7 +44,7 @@ public sealed class LocalApiGameState
     /// </summary>
     public void RefreshSpawnedProductsJson()
     {
-        string json = SpawnedProductsJsonBuilder.GetSpawnedProductsJson(this);
+        string json = SpawnedProductsJsonBuilder.GetSpawnedProductsJson();
         lock (_lock)
         {
             _cachedSpawnedProductsJson = json;

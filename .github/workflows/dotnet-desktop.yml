@@ -1,25 +1,34 @@
-name: Build
+name: CI
+
+# Full `dotnet build` needs game + Unity assemblies that are not stored in this public repo.
+# See README: "Developing locally" and "Continuous integration".
 
 on:
   push:
     branches: [develop]
   pull_request:
     branches: [develop]
+  workflow_dispatch:
 
 jobs:
-  build:
+  verify-repo:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET SDK
+      - name: Verify project and setup docs
+        run: |
+          test -f src/MySupermarketDataMod.csproj
+          test -f src/SuperMarketDll/README.md
+          test -f src/BepInExDll/README.md
+
+      - name: Setup .NET SDK (for future optional steps)
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      - name: Restore
-        run: dotnet restore src/MySupermarketDataMod.csproj
-
-      - name: Build
-        run: dotnet build src/MySupermarketDataMod.csproj -c Release --no-restore
+      - name: Explain CI vs local build
+        run: |
+          echo "Skipping dotnet build on GitHub-hosted runners: Supermarket Together managed DLLs are not in this repository."
+          echo "Contributors: copy DLLs per README into src/SuperMarketDll/ and src/BepInExDll/, then run: dotnet build src/MySupermarketDataMod.csproj -c Release"

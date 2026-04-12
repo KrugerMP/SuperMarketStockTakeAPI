@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using MySupermarketDataMod.Domain.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -14,28 +13,28 @@ namespace MySupermarketDataMod.Domain.StoreProducts;
 /// </summary>
 public static class StoreProductsJsonBuilder
 {
-    private static readonly JsonSerializerSettings JsonSettings = new()
+    private static readonly JsonSerializerSettings _jsonSettings = new()
     {
         ContractResolver = new CamelCasePropertyNamesContractResolver(),
         Formatting = Formatting.Indented,
         Converters = { new StringEnumConverter(new CamelCaseNamingStrategy()) },
     };
 
-    public static string GetAllProductStats(LocalApiGameState state)
+    public static string GetAllProductStats()
     {
         ProductListing listing = ProductListing.Instance;
         if (listing == null)
         {
             return JsonConvert.SerializeObject(
                 new { error = "ProductListing not available (not in a loaded game session)." },
-                JsonSettings);
+                _jsonSettings);
         }
 
         Data_Container[] containers = Object.FindObjectsByType<Data_Container>(
             FindObjectsInactive.Exclude,
             FindObjectsSortMode.None);
 
-        List<object> shelfProducts = new List<object>();
+        List<object> shelfProducts = new();
         foreach (Data_Container container in containers)
         {
             int[] arr = container.productInfoArray;
@@ -77,6 +76,6 @@ public static class StoreProductsJsonBuilder
             }
         }
 
-        return JsonConvert.SerializeObject(shelfProducts, JsonSettings);
+        return JsonConvert.SerializeObject(shelfProducts, _jsonSettings);
     }
 }
