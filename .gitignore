@@ -66,3 +66,6 @@ src/BepInExDll/**/*.mdb
 
 # Staged plugin output (copied from src/bin/Release/net472/ — do not commit the DLL)
 .release/*.dll
+
+# Scripts output (do not commit built plugin copies here)
+.scripts/SuperMarketStockTakeAPI.dll
