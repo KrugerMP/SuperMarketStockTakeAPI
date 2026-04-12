@@ -31,15 +31,6 @@ jobs:
 
       - name: Restore
         run: dotnet restore src/SuperMarketStockTakeAPI.csproj
-
-      - name: Build (Release)
-        run: dotnet build src/SuperMarketStockTakeAPI.csproj -c Release --no-restore -v minimal
-
-      - name: Stage DLL under .release
-        run: |
-          mkdir -p .release
-          cp src/bin/Release/net472/SuperMarketStockTakeAPI.dll .release/
-
       - name: Verify .release contains the plugin DLL
         run: |
           test -d .release
