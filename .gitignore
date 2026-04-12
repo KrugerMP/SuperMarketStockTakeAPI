@@ -63,3 +63,6 @@ src/SuperMarketDll/**/*.mdb
 src/BepInExDll/**/*.dll
 src/BepInExDll/**/*.pdb
 src/BepInExDll/**/*.mdb
+
+# Staged plugin output (copied from src/bin/Release/net472/ — do not commit the DLL)
+.release/*.dll

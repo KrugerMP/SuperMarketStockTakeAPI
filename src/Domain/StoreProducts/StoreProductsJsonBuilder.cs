@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
 
-namespace MySupermarketDataMod.Domain.StoreProducts;
+namespace SuperMarketStockTakeAPI.Domain.StoreProducts;
 
 /// <summary>
 /// Builds JSON for GET /products on the main thread.

@@ -11,7 +11,7 @@ A [BepInEx](https://docs.bepinex.dev/) plugin for [**Supermarket Together**](htt
 ## Requirements
 
 - **Supermarket Together** with **BepInEx** installed for that game.
-- **.NET Framework 4.7.2** SDK (or compatible tooling) to build the project under [`src/MySupermarketDataMod.csproj`](src/MySupermarketDataMod.csproj).
+- **.NET Framework 4.7.2** SDK (or compatible tooling) to build the project under [`src/SuperMarketStockTakeAPI.csproj`](src/SuperMarketStockTakeAPI.csproj).
 
 ## Developing locally
 
@@ -19,7 +19,7 @@ This repository **does not** ship the game’s managed assemblies or BepInEx DLL
 
 | Folder | What to put there |
 |--------|-------------------|
-| [`src/SuperMarketDll/`](src/SuperMarketDll/) | Unity / game **Managed** DLLs (`Assembly-CSharp.dll`, `UnityEngine*.dll`, etc.) — every file name referenced under `SuperMarketDll\` in [`MySupermarketDataMod.csproj`](src/MySupermarketDataMod.csproj). |
+| [`src/SuperMarketDll/`](src/SuperMarketDll/) | Unity / game **Managed** DLLs (`Assembly-CSharp.dll`, `UnityEngine*.dll`, etc.) — every file name referenced under `SuperMarketDll\` in [`SuperMarketStockTakeAPI.csproj`](src/SuperMarketStockTakeAPI.csproj). |
 | [`src/BepInExDll/`](src/BepInExDll/) | **BepInEx** core libraries (`BepInEx.dll`, Harmony, Mono.Cecil, …) matching the `BepInExDll\` references in the same `.csproj`. |
 
 **Game DLLs:** From your Steam install, open the game’s `…_Data/Managed/` directory (Unity layout) and copy the needed assemblies into `src/SuperMarketDll/`. Use a game **patch version** consistent with what you test against.
@@ -29,14 +29,24 @@ This repository **does not** ship the game’s managed assemblies or BepInEx DLL
 After both folders contain the expected files, build from the repository root:
 
 ```bash
-dotnet build src/MySupermarketDataMod.csproj -c Release
+dotnet build src/SuperMarketStockTakeAPI.csproj -c Release
 ```
 
-Output: `src/bin/Release/net472/MySupermarketDataMod.dll` (paths relative to the repo root).
+Output: `src/bin/Release/net472/SuperMarketStockTakeAPI.dll` (paths relative to the repo root).
+
+### Git `pre-push` hook (optional)
+
+To run **`dotnet build`** automatically before every **`git push`** (and block the push if the build fails), point Git at the tracked hooks directory once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The script is [`.githooks/pre-push`](.githooks/pre-push). After a successful build it copies **`SuperMarketStockTakeAPI.dll`** into **`.release/`** (same layout as CI). To push without building (e.g. emergency): **`git push --no-verify`**.
 
 ## Install
 
-Copy `MySupermarketDataMod.dll` into the game’s BepInEx plugin folder, for example:
+Copy `SuperMarketStockTakeAPI.dll` into the game’s BepInEx plugin folder, for example:
 
 `Supermarket Together/BepInEx/plugins/`
 
@@ -84,6 +94,7 @@ The listener binds to **localhost** only. If the server fails to start, check th
 - [`src/`](src/) — C# plugin source and `.csproj`. Game and BepInEx assemblies live under [`src/SuperMarketDll/`](src/SuperMarketDll/) and [`src/BepInExDll/`](src/BepInExDll/) **on your machine only** (see [Developing locally](#developing-locally)); tracked files there are setup notes, not binaries.
 - [`src/Plugin.cs`](src/Plugin.cs) — entry point; starts [`LocalHttpApiService`](src/Services/LocalHttpApiService.cs).
 - [`.bruno/SupermarketSim/`](.bruno/SupermarketSim/) — [Bruno](https://www.usebruno.com/) API collection (ping, stats, products, spawned products) targeting `http://localhost:8080`.
+- [`.release/`](.release/) — optional **staging copy** of the built `SuperMarketStockTakeAPI.dll` (ignored in git except [`.release/README.md`](.release/README.md)); produced locally by the [pre-push hook](#git-pre-push-hook-optional) and in CI before artifact upload.
 
 ## Bruno (API collection)
 
@@ -91,15 +102,16 @@ Open the repo in [Bruno](https://www.usebruno.com/) and import the collection un
 
 ## Continuous integration
 
-[`.github/workflows/dotnet-desktop.yml`](.github/workflows/dotnet-desktop.yml) runs a **lightweight check** on pushes and pull requests to `develop` (and can be run manually via **workflow_dispatch**): it verifies the project file and the setup readmes exist. It does **not** run `dotnet build`, because **GitHub-hosted runners do not have Supermarket Together’s managed DLLs**, and this public repository does not ship them.
+[`.github/workflows/dotnet-desktop.yml`](.github/workflows/dotnet-desktop.yml) runs on pushes and pull requests to `develop` (and **workflow_dispatch**):
 
-**How to get a real build in CI later (optional):**
+1. Verifies the project and setup readmes exist.
+2. **`dotnet restore`** / **`dotnet build`** (Release).
+3. Copies **`src/bin/Release/net472/SuperMarketStockTakeAPI.dll`** to **[`.release/`](.release/)** and checks that **`.release/SuperMarketStockTakeAPI.dll`** exists.
+4. Uploads that DLL as a workflow **artifact** named **`SuperMarketStockTakeAPI`** (download from the Actions run).
 
-- **Self-hosted runner** on a machine that has the game (or a copy of the two DLL folders) installed; add a job that runs `dotnet build` after copying artifacts into place.
-- **Private fork / internal pipeline** that restores proprietary assemblies from your own secure storage (still subject to license terms).
-- **Refactor the `.csproj`** to pull everything possible from **NuGet** (e.g. BepInEx packages) and only require a minimal set of game DLLs via a secret-backed download — game assemblies usually **cannot** be fetched legally by a public workflow.
+**Hosted runners:** The build step **requires** `src/SuperMarketDll/` and `src/BepInExDll/` to contain the referenced assemblies (same as a local build). This public repo does not commit those files, so **GitHub-hosted `ubuntu-latest` will fail at `dotnet build`** unless you add a bootstrap step (cache, artifact, or install from an allowed source). Use a **self-hosted runner** with DLLs already present, or a private pipeline, if you need green CI without vendoring game binaries.
 
-Until then, **treat `dotnet build` as a local step** after [Developing locally](#developing-locally).
+The **[`.release/README.md`](.release/README.md)** explains the folder; **`*.dll` under `.release/`** is gitignored so only the README stays in git.
 
 
 ## TODO

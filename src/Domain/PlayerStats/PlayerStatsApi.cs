@@ -1,7 +1,7 @@
 using System.Globalization;
-using MySupermarketDataMod.Domain.Json;
+using SuperMarketStockTakeAPI.Domain.Json;
 
-namespace MySupermarketDataMod.Domain.PlayerStats;
+namespace SuperMarketStockTakeAPI.Domain.PlayerStats;
 
 /// <summary>
 /// GET /stats JSON built from a main-thread snapshot.

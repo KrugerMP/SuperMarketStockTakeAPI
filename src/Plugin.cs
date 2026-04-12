@@ -1,12 +1,12 @@
 using System.IO;
 using BepInEx;
 using BepInEx.Logging;
-using MySupermarketDataMod.Domain.Http;
-using MySupermarketDataMod.Services;
+using SuperMarketStockTakeAPI.Domain.Http;
+using SuperMarketStockTakeAPI.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace MySupermarketDataMod;
+namespace SuperMarketStockTakeAPI;
 
 [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
 public class Plugin : BaseUnityPlugin

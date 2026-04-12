@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text;
 
-namespace MySupermarketDataMod.Domain.Json;
+namespace SuperMarketStockTakeAPI.Domain.Json;
 
 /// <summary>
 /// Escape a string for use inside JSON string values.
