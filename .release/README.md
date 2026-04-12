@@ -1,6 +1,6 @@
-# `.release` (generated output)
+# `.release`
 
-`SuperMarketStockTakeAPI.dll` is **not committed**. It is produced by:
+`SuperMarketStockTakeAPI.dll` can be **committed** here so clones include a built plugin without compiling.
 
-- **Local:** `dotnet build` and the optional [`pre-push` hook](../README.md#git-pre-push-hook-optional) (which copies the built DLL here).
-- **CI:** the GitHub Actions workflow copies the Release build output here, verifies the file, and uploads it as a workflow **artifact**.
+- **Local:** copy from `src/bin/Release/net472/SuperMarketStockTakeAPI.dll` after `dotnet build -c Release`, or use the [pre-push hook](../README.md#git-pre-push-hook-optional) (which copies the DLL here).
+- **CI:** the workflow builds, copies into `.release/`, verifies, and uploads the same file as an **artifact**.

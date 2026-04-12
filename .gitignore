@@ -64,7 +64,4 @@ src/BepInExDll/**/*.dll
 src/BepInExDll/**/*.pdb
 src/BepInExDll/**/*.mdb
 
-# Staged plugin output (copied from src/bin/Release/net472/ — do not commit the DLL)
-.release/*.dll
-
-# `.scripts/SuperMarketStockTakeAPI.dll` is intentionally tracked (see `.scripts/README.md`).
+# Optional: track `.release/SuperMarketStockTakeAPI.dll` and `.scripts/SuperMarketStockTakeAPI.dll` in git (see those folders’ READMEs).

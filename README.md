@@ -94,7 +94,7 @@ The listener binds to **localhost** only. If the server fails to start, check th
 - [`src/`](src/) — C# plugin source and `.csproj`. Game and BepInEx assemblies live under [`src/SuperMarketDll/`](src/SuperMarketDll/) and [`src/BepInExDll/`](src/BepInExDll/) **on your machine only** (see [Developing locally](#developing-locally)); tracked files there are setup notes, not binaries.
 - [`src/Plugin.cs`](src/Plugin.cs) — entry point; starts [`LocalHttpApiService`](src/Services/LocalHttpApiService.cs).
 - [`.bruno/SupermarketSim/`](.bruno/SupermarketSim/) — [Bruno](https://www.usebruno.com/) API collection (ping, stats, products, spawned products) targeting `http://localhost:8080`.
-- [`.release/`](.release/) — optional **staging copy** of the built `SuperMarketStockTakeAPI.dll` (ignored in git except [`.release/README.md`](.release/README.md)); produced locally by the [pre-push hook](#git-pre-push-hook-optional) and in CI before artifact upload.
+- [`.release/`](.release/) — **staging copy** of the built `SuperMarketStockTakeAPI.dll` (you can commit the DLL; see [`.release/README.md`](.release/README.md)); produced locally by the [pre-push hook](#git-pre-push-hook-optional) and in CI before artifact upload.
 - [`.scripts/`](.scripts/) — **tracked** copy of `SuperMarketStockTakeAPI.dll` for scripts or consumers who clone without building (see [`.scripts/README.md`](.scripts/README.md)); update when you release.
 
 ## Bruno (API collection)
@@ -112,7 +112,7 @@ Open the repo in [Bruno](https://www.usebruno.com/) and import the collection un
 
 **Hosted runners:** The build step **requires** `src/SuperMarketDll/` and `src/BepInExDll/` to contain the referenced assemblies (same as a local build). This public repo does not commit those files, so **GitHub-hosted `ubuntu-latest` will fail at `dotnet build`** unless you add a bootstrap step (cache, artifact, or install from an allowed source). Use a **self-hosted runner** with DLLs already present, or a private pipeline, if you need green CI without vendoring game binaries.
 
-The **[`.release/README.md`](.release/README.md)** explains the folder; **`*.dll` under `.release/`** is gitignored so only the README stays in git.
+The **[`.release/README.md`](.release/README.md)** explains the folder. Commit **`.release/SuperMarketStockTakeAPI.dll`** when you want the built mod in the repo (same idea as [`.scripts/`](.scripts/)).
 
 
 ## TODO
