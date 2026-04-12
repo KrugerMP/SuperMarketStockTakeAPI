@@ -1,6 +1,7 @@
 name: CI
 
-# Full `dotnet build` needs game + Unity assemblies that are not stored in this public repo.
+# Full `dotnet build` needs game + Unity assemblies under src/SuperMarketDll/ and src/BepInExDll/.
+# On GitHub-hosted ubuntu-latest, add those (e.g. self-hosted runner, cache, or private bootstrap) or this job will fail at build.
 # See README: "Developing locally" and "Continuous integration".
 
 on:
@@ -11,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  verify-repo:
+  build-and-release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,16 +20,26 @@ jobs:
 
       - name: Verify project and setup docs
         run: |
-          test -f src/MySupermarketDataMod.csproj
+          test -f src/SuperMarketStockTakeAPI.csproj
           test -f src/SuperMarketDll/README.md
           test -f src/BepInExDll/README.md
 
-      - name: Setup .NET SDK (for future optional steps)
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      - name: Explain CI vs local build
+      - name: Restore
+        run: dotnet restore src/SuperMarketStockTakeAPI.csproj
+      - name: Verify .release contains the plugin DLL
         run: |
-          echo "Skipping dotnet build on GitHub-hosted runners: Supermarket Together managed DLLs are not in this repository."
-          echo "Contributors: copy DLLs per README into src/SuperMarketDll/ and src/BepInExDll/, then run: dotnet build src/MySupermarketDataMod.csproj -c Release"
+          test -d .release
+          test -f .release/SuperMarketStockTakeAPI.dll
+          ls -la .release/SuperMarketStockTakeAPI.dll
+
+      - name: Upload .release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SuperMarketStockTakeAPI
+          path: .release/SuperMarketStockTakeAPI.dll
+          if-no-files-found: error

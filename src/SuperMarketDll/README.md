@@ -1,6 +1,6 @@
 # SuperMarketDll (local only)
 
-This folder is **not** in source control. Copy **managed assemblies** from your **Supermarket Together** installation so the paths in `MySupermarketDataMod.csproj` resolve (for example `Assembly-CSharp.dll`, `UnityEngine*.dll`, and the other referenced DLL names).
+This folder is **not** in source control. Copy **managed assemblies** from your **Supermarket Together** installation so the paths in `SuperMarketStockTakeAPI.csproj` resolve (for example `Assembly-CSharp.dll`, `UnityEngine*.dll`, and the other referenced DLL names).
 
 Typical locations:
 

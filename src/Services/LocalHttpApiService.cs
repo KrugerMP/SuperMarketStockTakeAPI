@@ -3,10 +3,10 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using BepInEx.Logging;
-using MySupermarketDataMod.Domain.Http;
-using MySupermarketDataMod.Domain.Ping;
+using SuperMarketStockTakeAPI.Domain.Http;
+using SuperMarketStockTakeAPI.Domain.Ping;
 
-namespace MySupermarketDataMod.Services;
+namespace SuperMarketStockTakeAPI.Services;
 
 /// <summary>
 /// HTTP listener on localhost; routes GET requests to domain handlers.

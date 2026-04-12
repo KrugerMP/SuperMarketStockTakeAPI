@@ -1,9 +1,10 @@
-namespace MySupermarketDataMod.Domain.Ping;
+namespace SuperMarketStockTakeAPI.Domain.Ping;
 
 /// <summary>
 /// GET /ping response body.
 /// </summary>
 public static class PingApi
 {
-    public const string JsonBody = "{\"ping\":\"pong version 0.0.8\"}";
+    public static readonly string JsonBody =
+        $"{{\"ping\":\"pong version {PluginInfo.Version}\"}}";
 }

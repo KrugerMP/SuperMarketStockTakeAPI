@@ -1,0 +1,16 @@
+#!/bin/sh
+# Run before `git push`. Blocks the push if the mod project does not build.
+# Skip: git push --no-verify
+# Requires: dotnet SDK, and local SuperMarketDll + BepInExDll per README.
+
+set -e
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+echo "pre-push: dotnet build src/SuperMarketStockTakeAPI.csproj (Release)..."
+dotnet build src/SuperMarketStockTakeAPI.csproj -c Release -v minimal
+
+echo "pre-push: copy SuperMarketStockTakeAPI.dll to .release/..."
+mkdir -p .release
+cp src/bin/Release/net472/SuperMarketStockTakeAPI.dll .release/
+test -f .release/SuperMarketStockTakeAPI.dll

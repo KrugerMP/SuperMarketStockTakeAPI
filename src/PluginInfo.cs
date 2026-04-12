@@ -1,12 +1,11 @@
-namespace MySupermarketDataMod
+namespace SuperMarketStockTakeAPI;
+
+/// <summary>
+/// BepInEx plugin identity. Keep in sync with <c>SuperMarketStockTakeAPI.csproj</c> Version / Product.
+/// </summary>
+internal static class PluginInfo
 {
-    /// <summary>
-    /// This class is used to provide information about your mod to BepInEx.
-    /// </summary>
-    internal class PluginInfo
-    {
-        public const string GUID = "senpaihub.dev";
-        public const string Name = "SuperMarket StockTake Mod";
-        public const string Version = "0.0.1";
-    }
+    public const string GUID = "senpaihub.dev";
+    public const string Name = "SuperMarket StockTake Mod";
+    public const string Version = "0.0.1";
 }

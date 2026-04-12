@@ -1,4 +1,4 @@
-namespace MySupermarketDataMod.Domain.StoreProducts;
+namespace SuperMarketStockTakeAPI.Domain.StoreProducts;
 
 /// <summary>
 /// Behavioral category for <see cref="Data_Container.containerClass"/>.

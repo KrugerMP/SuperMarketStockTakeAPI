@@ -63,3 +63,5 @@ src/SuperMarketDll/**/*.mdb
 src/BepInExDll/**/*.dll
 src/BepInExDll/**/*.pdb
 src/BepInExDll/**/*.mdb
+
+# Optional: track `.release/SuperMarketStockTakeAPI.dll` and `.scripts/SuperMarketStockTakeAPI.dll` in git (see those folders’ READMEs).

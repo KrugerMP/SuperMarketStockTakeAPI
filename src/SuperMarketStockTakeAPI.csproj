@@ -2,9 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <AssemblyName>MySupermarketDataMod</AssemblyName>
-    <Product>My first plugin</Product>
-    <Version>1.0.0</Version>
+    <AssemblyName>SuperMarketStockTakeAPI</AssemblyName>
+    <RootNamespace>SuperMarketStockTakeAPI</RootNamespace>
+    <Product>SuperMarket StockTake Mod</Product>
+    <Version>0.0.1</Version>
+    <AssemblyVersion>0.0.1</AssemblyVersion>
+    <FileVersion>0.0.1</FileVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
@@ -12,7 +15,6 @@
       https://nuget.bepinex.dev/v3/index.json;
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
-    <RootNamespace>MySupermarketDataMod</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

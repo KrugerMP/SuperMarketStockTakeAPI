@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
 
-namespace MySupermarketDataMod.Domain.SpawnedProducts;
+namespace SuperMarketStockTakeAPI.Domain.SpawnedProducts;
 
 /// <summary>
 /// Uses <see cref="ManagerBlackboard"/> (same object graph as <see cref="ProductListing"/> in-game): cargo queue, shopping list UI,

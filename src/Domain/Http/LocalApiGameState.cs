@@ -1,8 +1,8 @@
-using MySupermarketDataMod.Domain.PlayerStats;
-using MySupermarketDataMod.Domain.SpawnedProducts;
-using MySupermarketDataMod.Domain.StoreProducts;
+using SuperMarketStockTakeAPI.Domain.PlayerStats;
+using SuperMarketStockTakeAPI.Domain.SpawnedProducts;
+using SuperMarketStockTakeAPI.Domain.StoreProducts;
 
-namespace MySupermarketDataMod.Domain.Http;
+namespace SuperMarketStockTakeAPI.Domain.Http;
 
 /// <summary>
 /// Thread-safe snapshot for HTTP handlers (listener runs off the main thread).
