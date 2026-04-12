@@ -95,6 +95,7 @@ The listener binds to **localhost** only. If the server fails to start, check th
 - [`src/Plugin.cs`](src/Plugin.cs) — entry point; starts [`LocalHttpApiService`](src/Services/LocalHttpApiService.cs).
 - [`.bruno/SupermarketSim/`](.bruno/SupermarketSim/) — [Bruno](https://www.usebruno.com/) API collection (ping, stats, products, spawned products) targeting `http://localhost:8080`.
 - [`.release/`](.release/) — optional **staging copy** of the built `SuperMarketStockTakeAPI.dll` (ignored in git except [`.release/README.md`](.release/README.md)); produced locally by the [pre-push hook](#git-pre-push-hook-optional) and in CI before artifact upload.
+- [`.scripts/`](.scripts/) — **tracked** copy of `SuperMarketStockTakeAPI.dll` for scripts or consumers who clone without building (see [`.scripts/README.md`](.scripts/README.md)); update when you release.
 
 ## Bruno (API collection)
 
